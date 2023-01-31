@@ -6,51 +6,7 @@ RUN apk update
 
 RUN apk add --no-cache bash
 
-RUN echo "**** Instalação dos PHP ****" && \
-    apk add --no-cache --update \
-    php \
-    php-apcu \
-    php-ctype \
-    php-json \
-    php-posix \
-    php-zlib \
-    php-fileinfo \
-    php-ftp \
-    php-redis \
-    php-pcntl \
-    php-phar \
-    php-dev \
-    php-fpm \
-    php-dom \
-    php-xml \
-    php-simplexml \
-    php-mbstring \
-    php-xmlwriter \
-    php-xmlreader \
-    php-pdo_mysql \
-    php-mysqli \
-    php-bcmath \
-    php-bz2 \
-    php-curl \
-    php-gd \
-    php-opcache \
-    php-gmp \
-    php-imap \
-    php-intl \
-    php-ldap \
-    php-sodium \
-    php-zip \
-    php-exif \
-    php-session \
-    php-soap \
-    php-openssl \
-    php-pdo_odbc \
-    php-pdo \
-    php-odbc \
-    php-gettext \
-    php-iconv \
-    php-tokenizer
-
+RUN apk add php8 php8-xml php8-exif php8-fpm php8-session php8-soap php8-openssl php8-gmp php8-pdo_odbc php8-json php8-dom php8-pdo php8-zip php8-mysqli php8-sqlite3 php8-pdo_pgsql php8-bcmath php8-gd php8-odbc php8-pdo_mysql php8-pdo_sqlite php8-gettext php8-xmlreader php8-bz2 php8-iconv php8-pdo_dblib php8-curl php8-ctype php8-phar php8-fileinfo php8-mbstring php8-tokenizer php8-simplexml
 COPY --from=composer:latest  /usr/bin/composer /usr/bin/composer
 
 USER container
