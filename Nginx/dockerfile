@@ -1,21 +1,9 @@
 FROM alpine:3.17
 
-RUN apk --update --no-cache add curl ca-certificates nginx 
-RUN apk update
-
-RUN apk add --no-cache --upgrade sudo tar unzip curl
-
-RUN apk add --no-cache --update php
-COPY --from=composer:latest  /usr/bin/composer /usr/bin/composer
-
-# Instala o bash
-RUN apk add --no-cache bash
-
-# Remove o link simbólico para o shell padrão e cria um novo link simbólico para o bash
-RUN rm /bin/sh && ln -s /bin/bash /bin/sh
-
-# Define o shell padrão como bash
-SHELL ["/bin/bash", "-c"]
+RUN echo "**** Instalando ****" && \
+    apk --update --no-cache add curl ca-certificates nginx && \
+    apk add --no-cache --upgrade sudo git curl tar && \
+    apk update
 
 USER container
 ENV  USER container
@@ -23,6 +11,6 @@ ENV HOME /home/container
 
 WORKDIR /home/container
 
-COPY ./entrypoint.sh /entrypoint.sh
+COPY entrypoint.sh /entrypoint.sh
 
-CMD [ "bash", "/entrypoint.sh" ]
+CMD ["/bin/ash", "/entrypoint.sh"]
