@@ -81,9 +81,9 @@ if [ -z ${SUPORTE_ATIVO} ] || [ "${SUPORTE_ATIVO}" == "1" ]; then
   echo "${bold}${lightgreen}==>                                                                        <=="
   # Verifica Se O MODE_CONEXAO é local ou é externo
   if [ "${MODE_CONEXAO}" == "1" ]; then
-  echo "${bold}${lightgreen}==> 🟡 Connexão Externa Ativada(Permite qualquer um Ver e baixar no Site).  <=="
+  echo "${bold}${lightgreen}==> 🟡 Conexão Externa Ativada(Permite qualquer um Ver e baixar no Site).   <=="
   else
-  echo "${bold}${lightgreen}==> 🟢 Connexão Interna Ativada(Apenas a maquina pode baixar e ver o site). <=="
+  echo "${bold}${lightgreen}==> 🟢 Conexão Interna Ativada(Apenas a maquina pode baixar e ver o site).  <=="
   fi
   echo "${bold}${lightgreen}==>                                                                        <=="
   # Verifica Se O MODE_CONEXAO é local ou é externo
@@ -182,7 +182,7 @@ if [ -z ${SUPORTE_ATIVO} ] || [ "${SUPORTE_ATIVO}" == "1" ]; then
       rm -rf ./Cache
       rm -rf ./logs
       rm ./index.html
-      echo "${bold}${lightgreen}==> 🟠 Reiniciando para instalar a nova versão:$latest_version."
+      echo "${bold}${lightgreen}==> 🟠 iniciando script de instalação da nova versão:$latest_version."
       else
       echo "${bold}${lightgreen}==> 🟢 Verificação de Atualizações Detectou que a Sua versão é a mais atual."
       fi
@@ -235,19 +235,10 @@ if [ -z ${SUPORTE_ATIVO} ] || [ "${SUPORTE_ATIVO}" == "1" ]; then
     fi
   # Fim das Logs---------------------------------------------------
 
-  # Primeiro Reboot
-    if [[ -f "./Status/Configurado" ]]; then
-    echo "${bold}${lightgreen}==> 🟢 Configurações OK."
-    else
-    echo "${bold}${lightgreen}==> 🟢 Executando Reboot para as Novas Configurações."
-    touch ./Status/Configurado
-    fi
-  # Fim do Primeiro Reboot
-
 # Sistema do default.conf----------------------------------------
 if [[ -f "./Status/Default.conf_instalado" ]]; then
 echo "${bold}${lightgreen}==> 🟢 Default.conf ja carregado, executando Padrões no Break."
-if [ "${AUTO_UPDATE}" == "1" ]; then
+if [ -z "${DEFAULT_CONF}" ] || [ "${DEFAULT_CONF}" == "1" ]; then
 rm ./nginx/conf.d/default.conf
 cat > ./nginx/conf.d/default.conf << EOL
 server {
@@ -408,7 +399,7 @@ else
 # Sistema do default.conf----------------------------------------
 if [[ -f "./Status/Default.conf_instalado" ]]; then
 echo "${bold}${lightgreen}==> 🟢 Default.conf ja carregado, executando Padrões no Break."
-if [ "${AUTO_UPDATE}" == "1" ]; then
+if [ -z "${DEFAULT_CONF}" ] || [ "${DEFAULT_CONF}" == "1" ]; then
 rm ./nginx/conf.d/default.conf
 cat > ./nginx/conf.d/default.conf << EOL
 server {
