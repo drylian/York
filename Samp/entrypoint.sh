@@ -1,6 +1,4 @@
 #!/bin/ash
-# Aguarde até que o contêiner seja totalmente inicializado
-sleep 1 
 #################################################################################
 #                                                                               #
 #                                                                               #
@@ -10,18 +8,15 @@ sleep 1
 #################################################################################
 # Icones 🔴 🟠 🟡 🟢 🔵 🟣 🟤 ⚫ ⚪ ✅ ❌                                      #
 ########################################################################################################
-# Variaveis Facilmente Mudaveis                                                                        #
-########################################################################################################
 # Isto Define o Nome do egg e pasta dele                                                               #
-Nome_egg="Base"                                                                                        #
+Nome_egg="SA-MP"                                                                                       #
 # Isto Define o Stop do egg                                                                            # 
-Comando_stop="Sistema Entrypoint.sh Parar"                                                             #
-# Isto Define o novo StartUP do egg                                                                    # 
-Comando_StartUP="./novoStartup"                                                                        #
-########################################################################################################
+Comando_stop="Sistema Entrypoint.sh Parar"                                                                                        #
 # Versão do Entrypoint                                                      /Nome do Egg/              #
 entrypoint_vurl="https://raw.githubusercontent.com/drylian/Eggs/main/Connect/$Nome_egg/Versao_Atual"   #
-entrypoint_version=$(curl -s "$entrypoint_vurl" | grep "Entrypoint: " | awk '{print $2}')              #                                                                                               #
+entrypoint_version=$(curl -s "$entrypoint_vurl" | grep "Entrypoint: " | awk '{print $2}')              #
+# Aguarde até que o contêiner seja totalmente inicializado                                             #
+sleep 1                                                                                                #
 #Verifica a Arquitetura do Docker                                                                      #
 Arquitetura=$([ "$(uname -m)" == "x86_64" ] && echo "amd64" || echo "arm64")                           #
 # URL para a versão mais recente                                               /Nome do Egg/           #
@@ -107,12 +102,12 @@ if [ -z ${SUPORTE_ATIVO} ] || [ "${SUPORTE_ATIVO}" == "1" ]; then               
   #################################### STARTUP DO SCRIPT ###############################################
   # Comando Start--------------------------------------------
   # nohup ./samp03svr > log_$Nome_egg.txt 2>&1 &
-    nohup $Comando_StartUP > $Nome_egg.log.txt 2>&1 &
+    nohup ./samp03svr > log_$Nome_egg.txt 2>&1 &
   pid=$!
 
   # Continua a exibir as últimas linhas do arquivo de log a cada segundo
   while true; do
-  tail -n 10 -F $Nome_egg.log.txt
+  tail -n 10 -F log_$Nome_egg.txt
   sleep 1
   done &
   tail_pid=$!
@@ -126,7 +121,7 @@ if [ -z ${SUPORTE_ATIVO} ] || [ "${SUPORTE_ATIVO}" == "1" ]; then               
     echo "${bold}${lightgreen}== 🟢 Comando de Desligamento executado.                                     =="
     echo "${bold}${lightgreen}==                                                                          =="
     echo "${bold}${lightgreen}=============================================================================="
-    cat ./$Nome_egg.log.txt >> ./Status/$Nome_egg.log.txt
+    cat ./log_$Nome_egg.txt >> ./Status/log_$Nome_egg.txt
     sleep 15
     break
     elif [ "$line" != "$Comando_stop" ]; then
