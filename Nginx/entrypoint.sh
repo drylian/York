@@ -1,7 +1,9 @@
 #!/bin/ash
-
+# parece sacanagem mais aqui dentro tem um espaço que deve ser usado caso queira colocar versão " " o texto todo "versão: "
 # icones 🔴 🟠 🟡 🟢 🔵 🟣 🟤 ⚫ ⚪ ✅ ❌ 
-
+# Versão do Entrypoint
+entrypoint_vurl="https://raw.githubusercontent.com/drylian/Eggs/main/Connect/Nginx/Versao_Atual"
+entrypoint_version=$(curl -s "$entrypoint_vurl" | grep "Entrypoint: " | awk '{print $2}')
 # Aguarde até que o contêiner seja totalmente inicializado
 sleep 1
 #Verifica a Arquitetura do Docker
@@ -22,10 +24,10 @@ fi
 latest_version_url="https://raw.githubusercontent.com/drylian/Eggs/main/Connect/Nginx/Versao_Atual"
 
 # Extrai a versão atual do arquivo local version.sh
-current_version=$(grep "versão: " ./Status/Versao_Atual | awk '{print $2}')
+current_version=$(grep "Instalação: " ./Status/Versao_Atual | awk '{print $2}')
 
-# Extrai a versão mais recente da URL 
-latest_version=$(curl -s "$latest_version_url" | grep "versão: " | awk '{print $2}')
+# Extrai a versão mais recente da URL
+latest_version=$(curl -s "$latest_version_url" | grep "Instalação: " | awk '{print $2}')
 
 # Cores do Sistema
 bold=$(echo -en "\e[1m")
@@ -49,7 +51,7 @@ if [ -z ${SUPORTE_ATIVO} ] || [ "${SUPORTE_ATIVO}" == "1" ]; then
       echo "${bold}${lightgreen}==> 🔵 Arquitetura :Alpine AMD64x                                           <=="
   fi
   echo "${bold}${lightgreen}==>                                                                        <=="
-  echo "${bold}${lightgreen}==> ✅ Versão do Entrypoint.sh 1.5                                          <=="
+  echo "${bold}${lightgreen}==> ✅ Versão do Entrypoint: $entrypoint_version                                            <=="
   echo "${bold}${lightgreen}==>                                                                        <=="
   # Verifica Versão da Instalação
   if [ -z "$current_version" ]; then
@@ -361,13 +363,44 @@ EOL
     echo "${bold}${lightgreen}==> 🟢 Finalizando iniciador online"
     echo " "
     echo "${bold}${lightgreen}=============================================================================="
-    echo "${bold}${lightgreen}==> 🟢 Final do Entrypoint.sh 1.5                                           <=="
+    echo "${bold}${lightgreen}==> 🟢 Final do Entrypoint: $entrypoint_version                                             <=="
     echo "${bold}${lightgreen}=============================================================================="
+    echo " "
+    echo " "
+    echo " "
+    echo " "
+    echo " "
   # Fim Dialogo----------------------------------------------------
 
   # Comando Nginx start--------------------------------------------
-    /usr/sbin/nginx -c /home/container/nginx/nginx.conf -p /home/container/
-  # Fim Nginx start------------------------------------------------
+  nohup /usr/sbin/nginx -c /home/container/nginx/nginx.conf -p /home/container/ > log_nginx.txt 2>&1 &
+  pid=$!
+
+  # Continua a exibir as últimas linhas do arquivo de log a cada segundo
+  while true; do
+  tail -n 10 -F log_nginx.txt
+  sleep 1
+  done &
+  tail_pid=$!
+
+  # Aguarda input do usuário
+  while read line; do
+  if [ "$line" = "Sistema Entrypoint.sh Parar" ]; then
+    kill $pid
+    echo "${bold}${lightgreen}=============================================================================="
+    echo "${bold}${lightgreen}==                                                                          =="
+    echo "${bold}${lightgreen}== 🟢 Comando de Desligamento executado.                                     =="
+    echo "${bold}${lightgreen}==                                                                          =="
+    echo "${bold}${lightgreen}=============================================================================="
+    cat ./log_nginx.txt >> ./Arquivos/log_nginx.txt
+    break
+    elif [ "$line" != "Sistema Entrypoint.sh Parar" ]; then
+    echo "${bold}${lightgreen}=============================================================================="
+    echo "${bold}${lightgreen}==                                                                          =="
+    echo "${bold}${lightgreen}== 🔴 Comando Invalido, oque vocẽ está tentando fazer?                       =="
+    echo "${bold}${lightgreen}==                                                                          =="
+    echo "${bold}${lightgreen}=============================================================================="
+    else
   # Dialogo de Erro------------------------------------------------
     echo " "
     if [ "${REPARAR_SISTEMA}" == "1" ]; then
@@ -388,6 +421,12 @@ EOL
     echo "${bold}${lightgreen}=============================================================================="
     fi
   # Fim Dialogo de Erro--------------------------------------------
+  fi
+  done
+  # Interrompe a exibição das logs
+  kill $tail_pid
+  # Fim Nginx start------------------------------------------------
+  
 else
   # Dialogo--------------------------------------------------------
     echo "${bold}${vermelho}================================================================================"
@@ -481,12 +520,19 @@ if [[ -f "./index.html" ]]; then
     echo "${bold}${lightgreen}==> 🟢 HTML Local não encontrado, Baixando"
       curl -s https://raw.githubusercontent.com/drylian/Eggs/main/Connect/Nginx/index.html -o ./index.html
   fi
+  cd /home/container
+
+  # Substituir variáveis ​​de inicialização
+  MODIFIED_STARTUP=`eval echo $(echo ${STARTUP} | sed -e 's/{{/${/g' -e 's/}}/}/g')`
+  echo ":/home/container$ ${MODIFIED_STARTUP}"
+
+  # Execute o servidor
+  ${MODIFIED_STARTUP}
 fi
-cd /home/container
-
-# Substituir variáveis ​​de inicialização
-MODIFIED_STARTUP=`eval echo $(echo ${STARTUP} | sed -e 's/{{/${/g' -e 's/}}/}/g')`
-echo ":/home/container$ ${MODIFIED_STARTUP}"
-
-# Execute o servidor
-${MODIFIED_STARTUP}
+rm ./log_nginx.txt
+echo " "
+echo "${bold}${lightgreen}=============================================================================="
+echo "${bold}${lightgreen}==                                                                          =="
+echo "${bold}${lightgreen}== 🟢 Sistema Desligado, Até Mais.                                           =="
+echo "${bold}${lightgreen}==                                                                          =="
+echo "${bold}${lightgreen}=============================================================================="
