@@ -12,22 +12,39 @@ sleep 1
 ########################################################################################################
 # Variaveis Facilmente Mudaveis                                                                        #
 ########################################################################################################
-# Isto Define o Nome do egg e pasta dele                                                               #
+# Isto Define o Nome do egg, logs e a pasta da internet dele dele                                      #
 Nome_egg="Base"                                                                                        #
 # Isto Define o Stop do egg                                                                            # 
 Comando_stop="Sistema Entrypoint.sh Parar"                                                             #
 # Isto Define o novo StartUP do egg                                                                    # 
 Comando_StartUP="./novoStartup"                                                                        #
+# Isto Define o Link base do egg                                     /deixe o $Nome_egg                # 
+Base_Url="https://raw.githubusercontent.com/drylian/Eggs/main/Connect/${Nome_egg}"                     #
+# Isto Define a Pasta de Verificação do Egg (Use só o nome, o script ja possue ./)                     #
+Pasta_Verif="Status"                                                                                   #
+# Seta permissões Padrões                                                                              #
+Permissoes_padroes="chmod 777 ./*"                                                                     #
+# Comandos Permitidos apartir da iniciação $Subcomando                                                 #
+Subcomando="cmd" # no caso qualquer comando é permitido desde que comece com cmd ex:cmd help           #
+Subcomando_tag="./nome" # isto será oque de fato vai ser executado no terminal ex:./nome help          #
+########################################################################################################
+# Criação da Pasta de Vefiricação                                                                      #
+  if [[ -f "./${Pasta_Verif}/Pasta_Verif" ]]; then                                                     #
+    echo " "                                                                                           #
+  else                                                                                                 #
+    mkdir ./${Pasta_Verif}                                                                             #
+    touch ./${Pasta_Verif}/Pasta_Verif                                                                 #
+  fi                                                                                                   #
 ########################################################################################################
 # Versão do Entrypoint                                                      /Nome do Egg/              #
-entrypoint_vurl="https://raw.githubusercontent.com/drylian/Eggs/main/Connect/$Nome_egg/Versao_Atual"   #
+entrypoint_vurl="${Base_Url}/Versao_Atual"                                                            #
 entrypoint_version=$(curl -s "$entrypoint_vurl" | grep "Entrypoint: " | awk '{print $2}')              #                                                                                               #
 #Verifica a Arquitetura do Docker                                                                      #
 Arquitetura=$([ "$(uname -m)" == "x86_64" ] && echo "amd64" || echo "arm64")                           #
 # URL para a versão mais recente                                               /Nome do Egg/           #
-latest_version_url="https://raw.githubusercontent.com/drylian/Eggs/main/Connect/$Nome_egg/Versao_Atual"#
+latest_version_url="${Base_Url}/Versao_Atual"                                                            #
 # Extrai a versão atual do arquivo local version.sh                                                    #
-current_version=$(grep "Instalação: " ./Status/Versao_Atual | awk '{print $2}')                        #
+current_version=$(grep "Instalação: " ./${Pasta_Verif}/Versao_Atual | awk '{print $2}')                  #
 # Extrai a versão mais recente da URL                                                                  #
 latest_version=$(curl -s "$latest_version_url" | grep "Instalação: " | awk '{print $2}')               #
 # Cores do Sistema                                                                                     #
@@ -63,13 +80,23 @@ if [ -z ${SUPORTE_ATIVO} ] || [ "${SUPORTE_ATIVO}" == "1" ]; then               
   else
   echo "${bold}${lightgreen}==> ✅ Versão da Instalação Atual: $current_version                                      <=="
   fi
+  ###################################################################################################################################################|
   echo "${bold}${lightgreen}==>                                                                        <=="
+  # Verifica Se Atualização Automatica está ativada
+  if [ "${SUPORTE_ATIVO}" == "1" ]; then                                                               #<== Seta sem linha vermelhas          #<== Seta com Linhas
+  echo "${bold}${lightgreen}==> ✅ Sistema de Entrypoint Automatico está ativado.                       <=="
+  else
+  echo "${bold}${lightgreen}==> ❌ Sistema de Entrypoint Automatico está ${bold}${vermelho}desativado${bold}${lightgreen}.                     <=="
+  fi
+  echo "${bold}${lightgreen}==>                                                                        <=="
+  ###################################################################################################################################################
   echo "${bold}${lightgreen}=============================================================================="
   ##############################################################################################################
   ######################################## VERIFICAÇÃO EGG ##################################################
   echo "${bold}${lightgreen}=============================================================================="
   echo "${bold}${lightgreen}==>                                                                        <=="
   echo "${bold}${lightgreen}==>                           Verificação do Egg                           <=="
+  #############################################################################################################
   echo "${bold}${lightgreen}==>                                                                        <=="
   # Verifica se o Suporte_Ativo existe no egg
   if [ -z "$SUPORTE_ATIVO" ]; then
@@ -78,11 +105,11 @@ if [ -z ${SUPORTE_ATIVO} ] || [ "${SUPORTE_ATIVO}" == "1" ]; then               
   echo "${bold}${lightgreen}==> ✅ Variante do Suporte(ativar/desativar) do egg está definida.          <=="
   fi
   echo "${bold}${lightgreen}==>                                                                        <=="
+  #############################################################################################################
   echo "${bold}${lightgreen}=============================================================================="
   ###########################################################################################################
   ####################################### SCRIPT DO EGG #####################################################
   # COLOQUE AQUI DENTRO OS CODIGOS DO EGG
-  mkdir .Status
 
 
 
@@ -91,7 +118,7 @@ if [ -z ${SUPORTE_ATIVO} ] || [ "${SUPORTE_ATIVO}" == "1" ]; then               
   # COLOQUE AQUI APENAS OS SCRIPTS DE FINALIZAÇÃO DO EGG
   # Permissões----------------------------------------------------#
     echo "${bold}${lightgreen}==> 🟢 Setando permissões padrões." #
-    chmod 777 ./*                                                 #
+    eval "$Permissoes_padroes"                                    #
   # Fim Permissões------------------------------------------------#
   # Mostrar versão-----------------------------------------------------------------------------------------------------------------#
     echo "${bold}${lightgreen}=============================================================================="                      #
@@ -106,35 +133,43 @@ if [ -z ${SUPORTE_ATIVO} ] || [ "${SUPORTE_ATIVO}" == "1" ]; then               
 
   #################################### STARTUP DO SCRIPT ###############################################
   # Comando Start--------------------------------------------
-  # nohup ./samp03svr > log_$Nome_egg.txt 2>&1 &
-    nohup $Comando_StartUP > $Nome_egg.log.txt 2>&1 &
+  # nohup Start
+    nohup ${Comando_StartUP} > ${Nome_egg}.log.txt 2>&1 &
   pid=$!
 
   # Continua a exibir as últimas linhas do arquivo de log a cada segundo
   while true; do
-  tail -n 10 -F $Nome_egg.log.txt
+  tail -n 10 -F ${Nome_egg}.log.txt
   sleep 1
   done &
   tail_pid=$!
 
   # Aguarda input do usuário
   while read line; do
-  if [ "$line" = "$Comando_stop" ]; then
+  if [ "$line" = "${Comando_stop}" ]; then
     kill $pid
     echo "${bold}${lightgreen}=============================================================================="
     echo "${bold}${lightgreen}==                                                                          =="
-    echo "${bold}${lightgreen}== 🟢 Comando de Desligamento executado.                                     =="
+    echo "${bold}${lightgreen}== 🟢 Comando de Desligamento executado, Desligando...                       =="
     echo "${bold}${lightgreen}==                                                                          =="
     echo "${bold}${lightgreen}=============================================================================="
-    cat ./$Nome_egg.log.txt >> ./Status/$Nome_egg.log.txt
-    sleep 15
+    cat ./${Nome_egg}.log.txt >> ./${Pasta_Verif}/${Nome_egg}.log.txt
+    sleep 5
     break
-    elif [ "$line" != "$Comando_stop" ]; then
+    elif [ "$line" != "${Comando_stop}" ]; then
     echo "${bold}${lightgreen}=============================================================================="
     echo "${bold}${lightgreen}==                                                                          =="
     echo "${bold}${lightgreen}== 🔴 Comando Invalido, oque vocẽ está tentando fazer?                       =="
     echo "${bold}${lightgreen}==                                                                          =="
     echo "${bold}${lightgreen}=============================================================================="
+    elif [[ "$line" == "${Subcomando}*" ]]; then
+    Comando_usuario="${Subcomando_tag} ${line}"
+    echo "${bold}${lightgreen}=============================================================================="
+    echo "${bold}${lightgreen}==                                                                          =="
+    echo "${bold}${lightgreen}== 🟢 Sub Comando Executado.                                                 =="
+    echo "${bold}${lightgreen}==                                                                          =="
+    echo "${bold}${lightgreen}=============================================================================="
+    eval "$Comando_usuario"
     else
     echo " "
     echo "${bold}${lightgreen}=============================================================================="

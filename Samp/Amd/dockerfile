@@ -1,5 +1,7 @@
 FROM        debian:bullseye-slim
 
+RUN apt install coreutils
+
 RUN         apt update \
             && apt -y upgrade
 RUN         dpkg --configure -a \
