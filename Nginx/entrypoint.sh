@@ -1,4 +1,4 @@
-#!/bin/ash
+#!/bin/sh
 # parece sacanagem mais aqui dentro tem um espaço que deve ser usado caso queira colocar versão " " o texto todo "versão: "
 # icones 🔴 🟠 🟡 🟢 🔵 🟣 🟤 ⚫ ⚪ ✅ ❌ 
 # Versão do Entrypoint
