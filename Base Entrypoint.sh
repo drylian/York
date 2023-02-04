@@ -156,54 +156,58 @@ vermelho=$(echo -en "\e[31m")                                                   
     echo " "                                                                                                                       #
   # Fim Versão---------------------------------------------------------------------------------------------------------------------#
 
-  # StartUP comando
-    # nohup Start
-      nohup ${Comando_StartUP} > ${Nome_egg}.log.txt 2>&1 &
-      pid=$!
-      # Continua a exibir as últimas linhas do arquivo de log a cada segundo
-      while true; do
-      tail -n 10 -F ${Nome_egg}.log.txt
-      sleep 1
-      done &
-      tail_pid=$!
-      # Aguarda input do usuário
-      while read line; do
-      if [ "$line" = "${Comando_stop}" ]; then
-        kill $pid
-        echo "${bold}${lightgreen}=============================================================================="
-        echo "${bold}${lightgreen}==                                                                          =="
-        echo "${bold}${lightgreen}== 🟢 Comando de Desligamento executado, Desligando...                       =="
-        echo "${bold}${lightgreen}==                                                                          =="
-        echo "${bold}${lightgreen}=============================================================================="
-        cat ./${Nome_egg}.log.txt >> ./${Pasta_Verif}/${Nome_egg}.log.txt
-        sleep 5
-        break
-      elif [ "$line" != "${Comando_stop}" ]; then
-        echo "${bold}${lightgreen}== 🔴 Comando Invalido, oque vocẽ está tentando fazer? tente $Subcomando"
-      elif [[ "$line" == "${Subcomando}*" ]]; then
-        Comando_usuario="${Subcomando_tag} $(echo "$line" | sed 's/^${Subcomando} //')"
-        echo "${bold}${lightgreen}== 🟢 Sub Comando Executado."
-        eval "$Comando_usuario"
-      else
-        echo " "
-        echo "${bold}${lightgreen}=============================================================================="
-        echo "${bold}${lightgreen}==                                                                          =="
-        echo "${bold}${lightgreen}== 🟢 ${bold}${vermelho}Script Falhou ou Forçado pelo Kill.${bold}${lightgreen}                  =="
-        echo "${bold}${lightgreen}==                                                                          =="
-        echo "${bold}${lightgreen}=============================================================================="
-      fi
-      done
-      kill $tail_pid
-    # Fim Comando Start --------------------------------------------
-  # StartUP Fim
+  #################################### STARTUP DO SCRIPT ###############################################
+  # Comando Start--------------------------------------------
+  # nohup Start
+    nohup ${Comando_StartUP} > ${Nome_egg}.log.txt 2>&1 &
+  pid=$!
 
-# Fim if Suporte
-else
-# Dialogo--------------------------------------------------------
-  echo "${bold}${vermelho}================================================================================"
-  echo "${bold}${vermelho}= O Script de Iniciação está Desativado, iniciando sem script(Não recomendado) ="
-  echo "${bold}${vermelho}================================================================================"
-# Fim Dialogo----
+  # Continua a exibir as últimas linhas do arquivo de log a cada segundo
+  while true; do
+  tail -n 10 -F ${Nome_egg}.log.txt
+  sleep 1
+  done &
+  tail_pid=$!
+
+  # Aguarda input do usuário
+  while read line; do
+  if [ "$line" = "${Comando_stop}" ]; then
+    kill $pid
+    echo "${bold}${lightgreen}=============================================================================="
+    echo "${bold}${lightgreen}==                                                                          =="
+    echo "${bold}${lightgreen}== 🟢 Comando de Desligamento executado, Desligando...                       =="
+    echo "${bold}${lightgreen}==                                                                          =="
+    echo "${bold}${lightgreen}=============================================================================="
+    cat ./${Nome_egg}.log.txt >> ./${Pasta_Verif}/${Nome_egg}.log.txt
+    sleep 5
+    break
+    elif [ "$line" != "${Comando_stop}" ]; then
+    echo "${bold}${lightgreen}=============================================================================="
+    echo "${bold}${lightgreen}==                                                                          =="
+    echo "${bold}${lightgreen}== 🔴 Comando Invalido, oque vocẽ está tentando fazer?                       =="
+    echo "${bold}${lightgreen}==                                                                          =="
+    echo "${bold}${lightgreen}=============================================================================="
+    elif [[ "$line" == "${Subcomando}*" ]]; then
+    Comando_usuario="${Subcomando_tag} ${line}"
+    echo "${bold}${lightgreen}=============================================================================="
+    echo "${bold}${lightgreen}==                                                                          =="
+    echo "${bold}${lightgreen}== 🟢 Sub Comando Executado.                                                 =="
+    echo "${bold}${lightgreen}==                                                                          =="
+    echo "${bold}${lightgreen}=============================================================================="
+    eval "$Comando_usuario"
+    else
+    echo " "
+    echo "${bold}${lightgreen}=============================================================================="
+    echo "${bold}${lightgreen}==                                                                          =="
+    echo "${bold}${lightgreen}== 🟢 ${bold}${vermelho}Entrypoint Finalizado com ERRO ou Forçado pelo Kill.${bold}${lightgreen}                  =="
+    echo "${bold}${lightgreen}==                                                                          =="
+    echo "${bold}${lightgreen}=============================================================================="
+    fi
+  # Fim Comando Start --------------------------------------------
+    #################################### STARTUP DO SCRIPT ###############################################
+########################################################################################################
+else                                # ELSE DO ${SUPORTE_ATIVO}                                         #
+########################################################################################################
   # StartUP Padrão do Pterodactyl---------------------------------------------------------------------#
     cd /home/container                                                                                #
                                                                                                       #
@@ -214,4 +218,6 @@ else
     # Execute o servidor                                                                              #
     eval ${MODIFIED_STARTUP}                                                                          #
   # StartUP Padrão do Pterodactyl---------------------------------------------------------------------#
-fi
+########################################################################################################
+fi                                # FI DO ${SUPORTE_ATIVO}                                             #
+########################################################################################################
