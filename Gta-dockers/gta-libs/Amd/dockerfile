@@ -1,0 +1,43 @@
+FROM debian:bullseye
+
+RUN apt install coreutils
+
+RUN apt update \
+    && apt -y upgrade
+
+RUN dpkg --configure -a \
+    && apt-get install -f
+
+RUN dpkg --add-architecture i386 \
+    && apt update \
+    && apt upgrade -y
+
+RUN apt install -y libstdc++6 lib32stdc++6 tar curl iproute2 openssl fontconfig dirmngr ca-certificates
+
+RUN apt-get -y install default-libmysqlclient-dev
+
+RUN apt-get -y install libstdc++-10-dev
+
+RUN apt install -y build-essential
+
+RUN apt-get -y install libboost-all-dev libcrypto++-dev libssl-dev libsqlite3-dev
+
+RUN apt-get -y install sqlite3 libgl1-mesa-dev libasio-dev
+
+RUN apt-get -y install libsdl1.2-dev zlib1g-dev libcurl4-openssl-dev libxml2-dev
+            
+RUN useradd -d /home/container -m container
+
+RUN mkdir -p /run/systemd && echo 'docker' > /run/systemd/container
+
+RUN rm -rf /var/lib/apt/lists/*
+
+USER container
+
+ENV USER=container HOME=/home/container
+
+WORKDIR /home/container
+
+COPY ./entrypoint.sh /entrypoint.sh
+
+CMD [ "/bin/bash", "/entrypoint.sh" ]
