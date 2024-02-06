@@ -23,8 +23,6 @@ COPY vcpkg.json /opt/vcpkg/
 RUN --mount=type=cache,target=/var/cache/vcpkg \
 	/opt/vcpkg/vcpkg --feature-flags=binarycaching,manifests,versions install
 
-# Stage 2: create build
-FROM dependencies AS build
 WORKDIR /srv/build
 COPY src ./src
 COPY cmake ./cmake
