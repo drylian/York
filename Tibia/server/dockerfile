@@ -1,5 +1,5 @@
 # Define a imagem base
-FROM        ubuntu:latest
+FROM        ubuntu:20.04
 
 # Atualiza os pacotes e realiza o upgrade do sistema
 RUN         apt update \
