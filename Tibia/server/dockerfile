@@ -1,22 +1,45 @@
-FROM        debian:bullseye-slim
+# Define a imagem base
+FROM debian:bullseye-slim
 
-RUN         apt update \
-            && apt -y upgrade
-RUN         dpkg --add-architecture i386 \
-            && apt update \
-            && apt upgrade -y \
-            && apt install -y libstdc++6 lib32stdc++6 tar curl iproute2 openssl fontconfig dirmngr ca-certificates dnsutils tzdata zip  \
-            && apt install -y libtbb2:i386 libtbb-dev:i386 libicu-dev:i386  \
-            && apt install -y libc6 libstdc glibc libc6-dev libc \
-            && useradd -d /home/container -m container
+# Atualiza os pacotes e realiza o upgrade do sistema
+RUN apt update \
+    && apt -y upgrade \
+    && rm -rf /var/lib/apt/lists/*
 
-RUN         mkdir -p /run/systemd && echo 'docker' > /run/systemd/container
-RUN         rm -rf /var/lib/apt/lists/*
-RUN         apt update
+# Adiciona arquitetura i386 e instala pacotes necessários
+RUN dpkg --add-architecture i386 \
+    && apt update \
+    && apt install -y \
+        curl \
+        dnsutils \
+        dirmngr \
+        fontconfig \
+        iproute2 \
+        lib32stdc++6 \
+        libc6 \
+        libc6-dev \
+        libicu-dev:i386 \
+        libstdc++6 \
+        libstdc \
+        libtbb-dev:i386 \
+        libtbb2:i386 \
+        openssl \
+        tar \
+        tzdata \
+        zip \
+    && rm -rf /var/lib/apt/lists/*
 
-USER        container
-ENV         USER=container HOME=/home/container
-WORKDIR     /home/container
+# Cria um usuário chamado "container" e define seu diretório home
+RUN useradd -d /home/container -m container
 
-COPY        ./entrypoint.sh /entrypoint.sh
-CMD         [ "/bin/bash", "/entrypoint.sh" ]
+# Cria diretório para o systemd e define que é um contêiner Docker
+RUN mkdir -p /run/systemd && echo 'docker' > /run/systemd/container
+
+# Define o usuário padrão e o diretório de trabalho
+USER container
+ENV USER=container HOME=/home/container
+WORKDIR /home/container
+
+# Copia o script de entrada para o contêiner e define como comando padrão
+COPY ./entrypoint.sh /entrypoint.sh
+CMD ["/bin/bash", "/entrypoint.sh"]
