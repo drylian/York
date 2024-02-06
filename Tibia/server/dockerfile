@@ -11,8 +11,6 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 
 # Define o diretório de trabalho
 WORKDIR /opt
-COPY vcpkg.json /opt
-RUN vcpkgCommitId=$(grep '.builtin-baseline' vcpkg.json | awk -F: '{print $2}' | tr -d '," ') \
 
 # Clona o repositório vcpkg
 RUN git clone https://github.com/Microsoft/vcpkg.git
