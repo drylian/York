@@ -31,8 +31,8 @@ jobs:
 
       - uses: docker/build-push-action@v4
         with:
-          context: ./Tibia
-          file: ./Tibia/dockerfile
+          context: ./Tibia/${{ matrix.game }}
+          file: ./Tibia/${{ matrix.game }}/dockerfile
           platforms: linux/amd64
           push: true
           tags: |
