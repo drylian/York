@@ -20,7 +20,6 @@ RUN dpkg --add-architecture i386 \
         libc6-dev \
         libicu-dev:i386 \
         libstdc++6 \
-        libstdc \
         libtbb-dev:i386 \
         libtbb2:i386 \
         openssl \
