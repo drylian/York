@@ -10,18 +10,6 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
-# Define o diretório de trabalho
-WORKDIR /opt
-
-# Clona o repositório vcpkg
-RUN git clone https://github.com/Microsoft/vcpkg.git
-
-# Define o diretório de trabalho para vcpkg
-WORKDIR /opt/vcpkg
-
-# Instala pacotes vcpkg
-RUN /opt/vcpkg/vcpkg install --feature-flags=binarycaching,manifests,versions
-
 # Define o usuário padrão e o diretório de trabalho
 USER container
 ENV USER=container HOME=/home/container
