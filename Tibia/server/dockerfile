@@ -1,5 +1,6 @@
 # Define a imagem base
 FROM ubuntu:20.04
+ENV DEBIAN_FRONTEND=noninteractive
 
 # Instala dependências
 RUN apt-get update && apt-get install -y --no-install-recommends \
