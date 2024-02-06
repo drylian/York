@@ -1,4 +1,4 @@
-name: build Mta-External
+name: build Tibia
 on:
   workflow_dispatch:
   schedule:
@@ -7,16 +7,16 @@ on:
     branches:
       - main
     paths:
-      - mta/external/**
+      - Tibia/**
 jobs:
   push:
-    name: "mta:${{ matrix.game }}"
+    name: "tibia:${{ matrix.game }}"
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
       matrix:
         game:
-          - external
+          - server
           
     steps:
       - uses: actions/checkout@v3
@@ -31,9 +31,9 @@ jobs:
 
       - uses: docker/build-push-action@v4
         with:
-          context: ./mta/${{ matrix.game }}
-          file: ./mta/${{ matrix.game }}/dockerfile
+          context: ./Tibia/${{ matrix.game }}
+          file: ./Tibia/${{ matrix.game }}/dockerfile
           platforms: linux/amd64
           push: true
           tags: |
-            ghcr.io/drylian/mta:${{ matrix.game }}
+            ghcr.io/drylian/tibia:${{ matrix.game }}
