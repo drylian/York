@@ -3,12 +3,6 @@ FROM alpine:3.17.3
 # Instala o bash
 RUN apk add --no-cache bash
 
-# Remove o link simbólico para o shell padrão e cria um novo link simbólico para o bash
-RUN rm /bin/sh && ln -s /bin/bash /bin/sh
-
-# Define o shell padrão como bash
-SHELL ["/bin/bash", "-c"]
-
 # crypto++ is in edge/community
 RUN apk add --no-cache --repository http://dl-cdn.alpinelinux.org/alpine/edge/community/ \
   boost-iostreams \
