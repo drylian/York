@@ -1,4 +1,7 @@
-FROM alpine:3.17.3
+FROM alpine:3.17
+
+# Instala o bash
+RUN apk add --no-cache bash
 
 # crypto++ is in edge/community
 RUN apk add --no-cache --repository http://dl-cdn.alpinelinux.org/alpine/edge/community/ \
@@ -9,6 +12,7 @@ RUN apk add --no-cache --repository http://dl-cdn.alpinelinux.org/alpine/edge/co
   luajit \
   mariadb-connector-c \
   pugixml
+RUN     apk update
 
 USER container
 ENV USER container
@@ -16,6 +20,6 @@ ENV HOME /home/container
 
 WORKDIR /home/container
 
-COPY ./entrypoint.sh /entrypoint.sh
+COPY entrypoint.sh /entrypoint.sh
 
-CMD [ "/bin/ash", "/entrypoint.sh" ]
+CMD ["/bin/ash", "/entrypoint.sh"]
