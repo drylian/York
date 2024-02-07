@@ -1,8 +1,5 @@
 FROM alpine:3.17.3
 
-# Instala o bash
-RUN apk add --no-cache bash
-
 # crypto++ is in edge/community
 RUN apk add --no-cache --repository http://dl-cdn.alpinelinux.org/alpine/edge/community/ \
   boost-iostreams \
@@ -16,10 +13,9 @@ RUN apk add --no-cache --repository http://dl-cdn.alpinelinux.org/alpine/edge/co
 USER container
 ENV USER container
 ENV HOME /home/container
-ENV SHELL /bin/bash
 
 WORKDIR /home/container
 
 COPY ./entrypoint.sh /entrypoint.sh
 
-CMD [ "bash", "/entrypoint.sh" ]
+CMD [ "/bin/ash", "/entrypoint.sh" ]
