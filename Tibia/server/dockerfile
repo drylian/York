@@ -1,10 +1,21 @@
 # Use Debian Buster slim as base image
 FROM         --platform=$TARGETOS/$TARGETARCH debian:bullseye-slim
-
 ENV          DEBIAN_FRONTEND noninteractive
-RUN          useradd -m -d /home/container -s /bin/bash container
-RUN          ln -s /home/container/ /nonexistent
-ENV          USER=container HOME=/home/container
+
+# install Nginx dependencies
+RUN apt update \
+    &&   apt upgrade -y \
+    &&   apt-get install -y --no-install-recommends \
+    curl \
+    ca-certificates \
+    jq \
+    unzip \
+    git \
+    nginx \
+    gnupg \
+    software-properties-common \
+    apt-transport-https  \
+    &&   update-ca-certificates
 
 # Install Tibia dependencies
 RUN apt-get update && \
@@ -17,31 +28,14 @@ RUN apt-get update && \
         libc6 \
         xz-utils \
         liblzo2-2 \
-        iproute2 \
         liblua5.3-0 \
         libz-dev \
-        procps \
         libstdc++6 \
         luajit \
     && rm -rf /var/lib/apt/lists/*
 
-# Install NGINX and PHP
-RUN apt-get update && \
-    apt-get install -y --no-install-recommends \
-        jq \
-        unzip \
-        git \
-        nginx \
-        ca-certificates \
-        curl \
-        gnupg \
-        software-properties-common \
-        apt-transport-https \
-        wget \
-        lsb-release \
-    && apt-key adv --fetch-keys https://packages.sury.org/php/apt.gpg \
-    && echo "deb https://packages.sury.org/php/ $(lsb_release -sc) main" | tee /etc/apt/sources.list.d/php.list \
-    && apt-get update \
+# Install PHP dependencies
+RUN apt-get update \
     && apt-get install -y --no-install-recommends \
         php8.1 \
         php8.1-cli \
@@ -78,15 +72,12 @@ RUN apt-get update && \
         php8.1-tokenizer \
     && rm -rf /var/lib/apt/lists/*
 
-# Copy Composer binary from Composer image
-COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
+USER container
+ENV USER container
+ENV HOME /home/container
 
-# Set user and working directory
-WORKDIR     /home/container
+WORKDIR /home/container
 
-COPY        --chown=container:container ./entrypoint.sh /entrypoint.sh
-RUN         chmod +x /entrypoint.sh
-RUN chmod 755 /var/log/nginx/
-
+COPY entrypoint.sh /entrypoint.sh
 # Define default command
 CMD ["/bin/bash", "/entrypoint.sh"]
