@@ -11,26 +11,14 @@ RUN   apt update \
         apt-transport-https  \
         &&   update-ca-certificates
 
-RUN apt-get install -y --no-install-recommends -y \
-    file \
-    re2c \
-    libtool \
-    git \
-    gpg \
-    autoconf \
-    automake \
-    file \
-    wget \
-    jq \
-    imagemagick \
-    libxml2 \
-    tar \
-    unzip \
-    curl \
-    libzip-dev \
-    mariadb-server \
-    redis-server \
-    figlet
+RUN apt update && apt install -y wget gnupg2 lsb-release && \
+wget https://packages.sury.org/php/apt.gpg && apt-key add apt.gpg && \
+echo "deb https://packages.sury.org/php/ $(lsb_release -sc) main" | tee /etc/apt/sources.list.d/php.list
+
+RUN          apt install -y gcc g++ libgcc1 libc++-dev gdb libc6 git wget curl tar zip unzip binutils xz-utils liblzo2-2 cabextract iproute2 net-tools netcat telnet libatomic1 libsdl1.2debian libsdl2-2.0-0 \
+             libfontconfig libicu67 icu-devtools libunwind8 libssl-dev sqlite3 libsqlite3-dev libmariadbclient-dev-compat libduktape205 locales ffmpeg gnupg2 apt-transport-https software-properties-common ca-certificates \
+             liblua5.3-0 libz-dev rapidjson-dev tzdata libevent-dev libzip4 libprotobuf23 libfluidsynth2 procps libstdc++6 tini
+
 
 RUN echo "**** Instalação dos PHP ****" && \
     apt-get update && \
@@ -72,6 +60,10 @@ RUN echo "**** Instalação dos PHP ****" && \
     php8.1-tokenizer
 
 COPY --from=composer:latest  /usr/bin/composer /usr/bin/composer
+
+RUN apt-get install -y --no-install-recommends fakeroot
+
+RUN echo "UTC" > /etc/timezone
 
 USER container
 ENV  USER container
