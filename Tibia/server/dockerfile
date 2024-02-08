@@ -1,21 +1,23 @@
-# Use Debian Buster slim as base image
-FROM         --platform=$TARGETOS/$TARGETARCH debian:bullseye-slim
-ENV          DEBIAN_FRONTEND noninteractive
+# Use Debian Bullseye slim as base image
+FROM --platform=$TARGETOS/$TARGETARCH debian:bullseye-slim
+ENV DEBIAN_FRONTEND noninteractive
 
-# install Nginx dependencies
+# Install common dependencies
 RUN apt update \
-    &&   apt upgrade -y \
-    &&   apt-get install -y --no-install-recommends \
-    curl \
-    ca-certificates \
-    jq \
-    unzip \
-    git \
-    nginx \
-    gnupg \
-    software-properties-common \
-    apt-transport-https  \
-    &&   update-ca-certificates
+    && apt upgrade -y \
+    && apt-get install -y --no-install-recommends \
+        curl \
+        ca-certificates \
+        jq \
+        unzip \
+        git \
+        gnupg \
+        software-properties-common \
+        apt-transport-https \
+    && update-ca-certificates
+
+# Install Nginx
+RUN apt-get install -y nginx
 
 # Install Tibia dependencies
 RUN apt-get update && \
@@ -69,15 +71,17 @@ RUN apt-get update \
         php8.1-odbc \
         php8.1-gettext \
         php8.1-iconv \
-        php8.1-tokenizer \
     && rm -rf /var/lib/apt/lists/*
 
+# Set up user environment
 USER container
 ENV USER container
 ENV HOME /home/container
 
 WORKDIR /home/container
 
+# Copy entrypoint script
 COPY entrypoint.sh /entrypoint.sh
+
 # Define default command
 CMD ["/bin/bash", "/entrypoint.sh"]
