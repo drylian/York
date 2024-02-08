@@ -1,8 +1,14 @@
-FROM debian:buster-slim
+# Use Debian Buster slim as base image
+FROM         --platform=$TARGETOS/$TARGETARCH debian:bullseye-slim
+
+ENV          DEBIAN_FRONTEND noninteractive
+RUN          useradd -m -d /home/container -s /bin/bash container
+RUN          ln -s /home/container/ /nonexistent
+ENV          USER=container HOME=/home/container
 
 # Install Tibia dependencies
-RUN apt update \
-    && apt install -y \
+RUN apt-get update && \
+    apt-get install -y \
         gcc \
         g++ \
         libgcc1 \
@@ -51,12 +57,11 @@ RUN apt update \
         libfluidsynth2 \
         procps \
         libstdc++6 \
-        tini \
     && rm -rf /var/lib/apt/lists/*
 
 # Install NGINX and PHP
-RUN apt update \
-    && apt-get install -y --no-install-recommends \
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends \
         nginx \
         ca-certificates \
         curl \
@@ -67,7 +72,7 @@ RUN apt update \
         lsb-release \
     && apt-key adv --fetch-keys https://packages.sury.org/php/apt.gpg \
     && echo "deb https://packages.sury.org/php/ $(lsb_release -sc) main" | tee /etc/apt/sources.list.d/php.list \
-    && apt update \
+    && apt-get update \
     && apt-get install -y --no-install-recommends \
         php8.1 \
         php8.1-cli \
@@ -107,18 +112,13 @@ RUN apt update \
 # Copy Composer binary from Composer image
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
-# Set timezone
-RUN echo "UTC" > /etc/timezone
-
 # Set user and working directory
-USER container
-ENV USER container
-ENV HOME /home/container
-WORKDIR /home/container
+WORKDIR     /home/container
+
 STOPSIGNAL SIGINT
 
-# Copy entrypoint script
-COPY ./entrypoint.sh /entrypoint.sh
+COPY        --chown=container:container ./entrypoint.sh /entrypoint.sh
+RUN         chmod +x /entrypoint.sh
 
 # Define default command
-CMD [ "bash", "/entrypoint.sh" ]
+CMD ["bash", "/entrypoint.sh"]
