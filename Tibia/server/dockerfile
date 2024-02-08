@@ -11,6 +11,7 @@ RUN apt-get update && \
     apt-get install -y \
         jq \
         unzip \
+        git \
         gcc \
         g++ \
         libgcc1 \
@@ -20,9 +21,6 @@ RUN apt-get update && \
         xz-utils \
         liblzo2-2 \
         iproute2 \
-        libsdl1.2debian \
-        libsdl2-2.0-0 \
-        libicu67 \
         liblua5.3-0 \
         libz-dev \
         procps \
