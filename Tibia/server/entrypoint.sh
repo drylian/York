@@ -10,5 +10,3 @@ echo -e ":/home/container$ ${MODIFIED_STARTUP}"
 
 # Run the Server
 eval ${MODIFIED_STARTUP}
-fakeroot
-nohup supervisord -c /etc/supervisor.d/supervisord.ini &
