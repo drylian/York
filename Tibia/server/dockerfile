@@ -15,21 +15,11 @@ RUN apt-get update && \
         libc++-dev \
         gdb \
         libc6 \
-        git \
-        wget \
-        curl \
-        tar \
-        zip \
         unzip \
         binutils \
         xz-utils \
         liblzo2-2 \
-        cabextract \
         iproute2 \
-        net-tools \
-        netcat \
-        telnet \
-        libatomic1 \
         libsdl1.2debian \
         libsdl2-2.0-0 \
         libfontconfig \
@@ -37,26 +27,13 @@ RUN apt-get update && \
         icu-devtools \
         libunwind8 \
         libssl-dev \
-        sqlite3 \
-        libsqlite3-dev \
-        libmariadbclient-dev-compat \
         libduktape205 \
-        locales \
-        ffmpeg \
-        gnupg2 \
-        apt-transport-https \
-        software-properties-common \
-        ca-certificates \
         liblua5.3-0 \
         libz-dev \
         rapidjson-dev \
-        tzdata \
-        libevent-dev \
-        libzip4 \
-        libprotobuf23 \
-        libfluidsynth2 \
         procps \
         libstdc++6 \
+        luajit \
     && rm -rf /var/lib/apt/lists/*
 
 # Install NGINX and PHP
@@ -70,7 +47,6 @@ RUN apt-get update && \
         apt-transport-https \
         wget \
         lsb-release \
-        luajit \
     && apt-key adv --fetch-keys https://packages.sury.org/php/apt.gpg \
     && echo "deb https://packages.sury.org/php/ $(lsb_release -sc) main" | tee /etc/apt/sources.list.d/php.list \
     && apt-get update \
