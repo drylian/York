@@ -9,9 +9,6 @@ ENV          USER=container HOME=/home/container
 # Install Tibia dependencies
 RUN apt-get update && \
     apt-get install -y \
-        jq \
-        unzip \
-        git \
         gcc \
         g++ \
         libgcc1 \
@@ -31,6 +28,9 @@ RUN apt-get update && \
 # Install NGINX and PHP
 RUN apt-get update && \
     apt-get install -y --no-install-recommends \
+        jq \
+        unzip \
+        git \
         nginx \
         ca-certificates \
         curl \
@@ -90,4 +90,4 @@ COPY        --chown=container:container ./entrypoint.sh /entrypoint.sh
 RUN         chmod +x /entrypoint.sh
 
 # Define default command
-CMD ["bash", "/entrypoint.sh"]
+CMD ["bin/bash", "/entrypoint.sh"]
