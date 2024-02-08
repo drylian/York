@@ -84,10 +84,9 @@ COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 # Set user and working directory
 WORKDIR     /home/container
 
-STOPSIGNAL SIGINT
-
 COPY        --chown=container:container ./entrypoint.sh /entrypoint.sh
 RUN         chmod +x /entrypoint.sh
+RUN chmod 755 /var/log/nginx/
 
 # Define default command
 CMD ["/bin/bash", "/entrypoint.sh"]
