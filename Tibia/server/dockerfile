@@ -9,6 +9,8 @@ ENV          USER=container HOME=/home/container
 # Install Tibia dependencies
 RUN apt-get update && \
     apt-get install -y \
+        jq \
+        unzip \
         gcc \
         g++ \
         libgcc1 \
