@@ -2,8 +2,8 @@ FROM debian:buster-slim
 
 RUN apt update \
     && apt-get install -y --no-install-recommends \
-        nginx \
         gcc \
+        nginx \
         ca-certificates \
         curl \
         gnupg \
@@ -11,7 +11,7 @@ RUN apt update \
         apt-transport-https \
         wget \
         lsb-release \
-        fakeroot \
+        luajit \
     && apt-key adv --fetch-keys https://packages.sury.org/php/apt.gpg \
     && echo "deb https://packages.sury.org/php/ $(lsb_release -sc) main" | tee /etc/apt/sources.list.d/php.list \
     && apt update \
