@@ -37,7 +37,9 @@ RUN apt-get update && \
     && rm -rf /var/lib/apt/lists/*
 
 # Install PHP dependencies
-RUN apt-get update \
+RUN apt-key adv --fetch-keys https://packages.sury.org/php/apt.gpg \
+    && echo "deb https://packages.sury.org/php/ $(lsb_release -sc) main" | tee /etc/apt/sources.list.d/php.list \
+    && apt-get update \
     && apt-get install -y --no-install-recommends \
         php8.1 \
         php8.1-cli \
