@@ -2,7 +2,7 @@ FROM debian:buster-slim
 
 RUN apt update \
     && apt-get install -y --no-install-recommends \
-        gcc \
+        gcc g++ libgcc1 libc++-dev gdb libc6 \
         nginx \
         ca-certificates \
         curl \
@@ -12,8 +12,6 @@ RUN apt update \
         wget \
         lsb-release \
         luajit \
-        libc6 \
-        libstdc++6 \
     && apt-key adv --fetch-keys https://packages.sury.org/php/apt.gpg \
     && echo "deb https://packages.sury.org/php/ $(lsb_release -sc) main" | tee /etc/apt/sources.list.d/php.list \
     && apt update \
