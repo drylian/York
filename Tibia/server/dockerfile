@@ -13,6 +13,7 @@ RUN apt update \
         unzip \
         git \
         gnupg \
+        wget \
         software-properties-common \
         apt-transport-https \
     && update-ca-certificates
