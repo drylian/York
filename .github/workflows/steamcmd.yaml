@@ -1,4 +1,4 @@
-name: build Tibia
+name: build SteamCMD
 on:
   workflow_dispatch:
   schedule:
