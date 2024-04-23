@@ -1,4 +1,4 @@
-name: build SteamCMD
+name: build Survival Craft
 on:
   workflow_dispatch:
   schedule:
@@ -10,7 +10,7 @@ on:
       - survivalcraft/**
 jobs:
   push:
-    name: "steamcmd:${{ matrix.game }}"
+    name: "survivalcraft:${{ matrix.game }}"
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
@@ -36,4 +36,4 @@ jobs:
           platforms: linux/arm64
           push: true
           tags: |
-            ghcr.io/drylian/steamcmd:${{ matrix.game }}
+            ghcr.io/drylian/survivalcraft:${{ matrix.game }}
