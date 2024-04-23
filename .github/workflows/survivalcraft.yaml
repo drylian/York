@@ -7,7 +7,7 @@ on:
     branches:
       - main
     paths:
-      - ConterStrike/**
+      - survivalcraft/**
 jobs:
   push:
     name: "steamcmd:${{ matrix.game }}"
@@ -31,8 +31,8 @@ jobs:
 
       - uses: docker/build-push-action@v4
         with:
-          context: ./ConterStrike/${{ matrix.game }}
-          file: ./ConterStrike/${{ matrix.game }}/dockerfile
+          context: ./survivalcraft/${{ matrix.game }}
+          file: ./survivalcraft/${{ matrix.game }}/dockerfile
           platforms: linux/arm64
           push: true
           tags: |
