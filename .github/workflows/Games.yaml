@@ -10,7 +10,7 @@ on:
       - Games/**
 jobs:
   push:
-    name: "tibia:${{ matrix.game }}"
+    name: "games:${{ matrix.game }}"
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
