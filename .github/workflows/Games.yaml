@@ -7,16 +7,16 @@ on:
     branches:
       - main
     paths:
-      - survivalcraft/**
+      - Games/**
 jobs:
   push:
-    name: "survivalcraft:${{ matrix.game }}"
+    name: "tibia:${{ matrix.game }}"
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
       matrix:
         game:
-          - server
+          - survivalcraft
           
     steps:
       - uses: actions/checkout@v3
@@ -31,9 +31,9 @@ jobs:
 
       - uses: docker/build-push-action@v4
         with:
-          context: ./survivalcraft/${{ matrix.game }}
-          file: ./survivalcraft/${{ matrix.game }}/dockerfile
-          platforms: linux/arm64
+          context: ./Games/${{ matrix.game }}
+          file: ./Games/${{ matrix.game }}/dockerfile
+          platforms: linux/amd64
           push: true
           tags: |
-            ghcr.io/drylian/survivalcraft:${{ matrix.game }}
+            ghcr.io/drylian/games:${{ matrix.game }}
