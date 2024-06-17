@@ -1,4 +1,5 @@
-FROM alpine:latest
+FROM alpine:alpine3.15
+
 RUN apk --update --no-cache add curl ca-certificates bash nginx
 RUN apk update
 
