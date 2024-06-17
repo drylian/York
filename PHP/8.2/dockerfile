@@ -1,13 +1,11 @@
-FROM alpine:3.20
+FROM alpine:3.14
 
 RUN apk --update --no-cache add curl ca-certificates nginx
-RUN apk add --no-cache --upgrade bash
-RUN rm /bin/sh && ln -s /bin/bash /bin/sh
 
 ENV PHP_VERSION="82"
 ENV PHP_DEPENDENCIES="ctype,json,posix,zlib,fileinfo,ftp,pcntl,phar,fpm,dom,xml,simplexml,mbstring,xmlwriter,xmlreader,pdo_mysql,mysqli,bcmath,bz2,curl,gd,opcache,gmp,imap,intl,ldap,sodium,zip,exif,session,soap,openssl,pdo_odbc,pdo,odbc,gettext,iconv,tokenizer"
 
-# Create a single command to install PHP and dependencies
+# Create a single command to install PHP and dependencies 
 RUN PHP_CMD="php${PHP_VERSION}"; \
     for dep in ${PHP_DEPENDENCIES//,/ }; do \
         PHP_CMD+=" php${PHP_VERSION}-$dep"; \
@@ -24,6 +22,9 @@ COPY --from=composer:latest  /usr/bin/composer /usr/bin/composer
 USER container
 ENV USER container
 ENV HOME /home/container
+
+RUN apk add --no-cache --upgrade bash
+RUN rm /bin/sh && ln -s /bin/bash /bin/sh
 ENV SHELL /bin/bash
 
 WORKDIR /home/container
