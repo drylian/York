@@ -1,6 +1,6 @@
 FROM alpine:3.20
 
-RUN apk --update --no-cache add curl ca-certificates nginx
+RUN apk --update --no-cache add curl ca-certificates nginx git
 
 ENV PHP_VERSION="82"
 ENV PHP_DEPENDENCIES="ctype,json,posix,zlib,fileinfo,ftp,pcntl,phar,fpm,dom,xml,simplexml,mbstring,xmlwriter,xmlreader,pdo_mysql,mysqli,bcmath,bz2,curl,gd,opcache,gmp,imap,intl,ldap,sodium,zip,exif,session,soap,openssl,pdo_odbc,pdo,odbc,gettext,iconv,tokenizer"
