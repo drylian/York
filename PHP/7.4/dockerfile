@@ -2,15 +2,12 @@ FROM alpine:latest
 RUN apk --update --no-cache add curl ca-certificates bash nginx
 
 ENV PHP_VERSION="74"
-ENV PHP_DEPENDENCIES="ctype json posix zlib fileinfo ftp pcntl phar fpm dom xml simplexml mbstring xmlwriter xmlreader pdo_mysql mysqli bcmath bz2 curl gd opcache gmp imap intl ldap sodium zip exif session soap openssl pdo_odbc pdo odbc gettext iconv tokenizer"
-ENV PHP_CMD="php-${PHP_VERSION}"
+ENV PHP_DEPENDENCIES="ctype,json,posix,zlib,fileinfo,ftp,pcntl,phar,fpm,dom,xml,simplexml,mbstring,xmlwriter,xmlreader,pdo_mysql,mysqli,bcmath,bz2,curl,gd,opcache,gmp,imap,intl,ldap,sodium,zip,exif,session,soap,openssl,pdo_odbc,pdo,odbc,gettext,iconv,tokenizer"
+ENV PHP_CMD="php${PHP_VERSION}-{${PHP_DEPENDENCIES}}"
 
 RUN echo "**** Instalação do PHP ${PHP_VERSION} ****" && \
     apk update && \
-    apk add --no-cache --update $PHP_CMD && \
-    for dep in $PHP_DEPENDENCIES; do \
-        apk add --no-cache ${PHP_CMD}-${dep}; \
-    done && \
+    apk add --no-cache --update php-${PHP_VERSION} ${PHP_CMD} && \
     rm -rf /var/cache/apk/*
     
 COPY --from=composer:latest  /usr/bin/composer /usr/bin/composer
