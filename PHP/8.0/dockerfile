@@ -18,13 +18,12 @@ RUN PHP_CMD="php${PHP_VERSION}"; \
 RUN php${PHP_VERSION} -v
     
 COPY --from=composer:latest  /usr/bin/composer /usr/bin/composer
+RUN apk add --no-cache --upgrade bash
+RUN rm /bin/sh && ln -s /bin/bash /bin/sh
 
 USER container
 ENV USER container
 ENV HOME /home/container
-
-RUN apk add --no-cache --upgrade bash
-RUN rm /bin/sh && ln -s /bin/bash /bin/sh
 ENV SHELL /bin/bash
 
 WORKDIR /home/container
