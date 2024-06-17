@@ -4,7 +4,7 @@ sleep 1
 
 cd /home/container
 
-__PHP_VERSION="8"
+export __PHP_VERSION="8"
 
 # Make internal Docker IP address available to processes.
 INTERNAL_IP=$(ip route get 1 | awk '{print $(NF-2);exit}')
