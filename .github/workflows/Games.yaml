@@ -6,7 +6,7 @@ on:
   push:
     branches:
       - main
-    paths:
+    paths:z
       - Games/**
 jobs:
   push:
@@ -17,6 +17,7 @@ jobs:
       matrix:
         game:
           - cs-1.6
+          - survivalcraft
           
     steps:
       - uses: actions/checkout@v3
