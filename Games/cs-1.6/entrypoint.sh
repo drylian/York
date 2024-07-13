@@ -35,7 +35,7 @@ if [ ! -f "./installed" ]; then
   rm -r ./HLDS-CS1.6
 
   # Create the 'installed' file to mark that the installation is complete
-  touch ./installed
+  touch ../installed
   cd /home/container || exit 1
 fi
 
