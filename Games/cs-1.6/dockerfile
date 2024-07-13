@@ -7,8 +7,12 @@ RUN dpkg --add-architecture i386 \
     && apt-get update \
     && apt-get upgrade -y
 
+# Adiciona componentes contrib e non-free ao sources.list
+RUN sed -i 's/main$/main contrib non-free/' /etc/apt/sources.list \
+    && apt-get update -y
+
 # Instala pacotes necessários
-RUN apt-get install -y \
+RUN apt-get install -y --no-install-recommends \
     tar unzip curl gcc git g++ lib32gcc-s1 libgcc-12-dev libgcc-11-dev \
     libcurl4-gnutls-dev:i386 libssl-dev:i386 libcurl4:i386 lib32tinfo6 \
     libtinfo6:i386 lib32z1 lib32stdc++6 libncurses5:i386 libcurl3-gnutls:i386 \
@@ -19,12 +23,6 @@ RUN apt-get install -y \
 
 # Adiciona usuário container
 RUN useradd -m -d /home/container container
-
-# Copia sources.list personalizado e instala pacotes adicionais
-COPY ./sources.list /etc/apt/sources.list
-RUN apt-get update -y \
-    && apt-get install -y --no-install-recommends ca-certificates locales steamcmd \
-    && rm -rf /var/lib/apt/lists/*
 
 # Instalação temporária de libssl1.1 se necessário
 RUN if [ "$(uname -m)" = "x86_64" ]; then \
