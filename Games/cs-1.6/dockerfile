@@ -1,46 +1,33 @@
-FROM debian:12-slim
+FROM        --platform=$TARGETOS/$TARGETARCH debian:bookworm-slim
 
-ENV DEBIAN_FRONTEND=noninteractive
+ENV         DEBIAN_FRONTEND=noninteractive
 
-# Adiciona arquitetura i386 e atualiza a lista de pacotes
-RUN dpkg --add-architecture i386 \
-    && apt-get update \
-    && apt-get upgrade -y
+RUN         dpkg --add-architecture i386 \
+            && apt-get update \
+            && apt-get upgrade -y \
+            && apt-get install -y tar unzip curl gcc git g++ lib32gcc-s1 libgcc-12-dev libgcc-11-dev libcurl4-gnutls-dev:i386 libssl-dev:i386 libcurl4:i386 lib32tinfo6 libtinfo6:i386 lib32z1 lib32stdc++6 libncurses5:i386 libcurl3-gnutls:i386 libsdl2-2.0-0:i386 libsdl2-2.0-0 iproute2 gdb libsdl1.2debian libfontconfig1 telnet net-tools netcat-traditional tzdata numactl xvfb wget tini \
+            && useradd -m -d /home/container container
 
-# Adiciona componentes contrib e non-free ao sources.list
-RUN sed -i 's/main$/main contrib non-free/' /etc/apt/sources.list \
-    && apt-get update -y
+## install rcon
+RUN         cd /tmp/ \
+            && curl -sSL https://github.com/gorcon/rcon-cli/releases/download/v0.10.3/rcon-0.10.3-amd64_linux.tar.gz > rcon.tar.gz \
+            && tar xvf rcon.tar.gz \
+            && mv rcon-0.10.3-amd64_linux/rcon /usr/local/bin/
 
-# Instala pacotes necessários
-RUN apt-get install -y --no-install-recommends \
-    tar unzip curl gcc git g++ lib32gcc-s1 libgcc-12-dev libgcc-11-dev \
-    libcurl4-gnutls-dev:i386 libssl-dev:i386 libcurl4:i386 lib32tinfo6 \
-    libtinfo6:i386 lib32z1 lib32stdc++6 libncurses5:i386 libcurl3-gnutls:i386 \
-    libsdl2-2.0-0:i386 libsdl2-2.0-0 iproute2 gdb libsdl1.2debian libfontconfig1 \
-    telnet net-tools netcat-traditional tzdata numactl xvfb wget tini \
-    ca-certificates locales steamcmd \
-    && rm -rf /var/lib/apt/lists/*
+            # Temp fix for things that still need libssl1.1
+RUN         if [ "$(uname -m)" = "x86_64" ]; then \
+                wget http://archive.ubuntu.com/ubuntu/pool/main/o/openssl/libssl1.1_1.1.0g-2ubuntu4_amd64.deb && \
+                dpkg -i libssl1.1_1.1.0g-2ubuntu4_amd64.deb && \
+                rm libssl1.1_1.1.0g-2ubuntu4_amd64.deb; \
+            fi
 
-# Adiciona usuário container
-RUN useradd -m -d /home/container container
+USER        container
+ENV         USER=container HOME=/home/container
+WORKDIR     /home/container
 
-# Instalação temporária de libssl1.1 se necessário
-RUN if [ "$(uname -m)" = "x86_64" ]; then \
-        wget http://archive.ubuntu.com/ubuntu/pool/main/o/openssl/libssl1.1_1.1.0g-2ubuntu4_amd64.deb && \
-        dpkg -i libssl1.1_1.1.0g-2ubuntu4_amd64.deb && \
-        rm libssl1.1_1.1.0g-2ubuntu4_amd64.deb; \
-    fi
-
-# Define variáveis de ambiente e diretório de trabalho
-USER container
-ENV USER=container HOME=/home/container
-WORKDIR /home/container
-
-# Define sinal de parada e copia entrypoint
 STOPSIGNAL SIGINT
-COPY --chown=container:container ./entrypoint.sh /entrypoint.sh
-RUN chmod +x /entrypoint.sh
 
-# Define entrypoint e comando padrão
-ENTRYPOINT ["/usr/bin/tini", "-g", "--"]
-CMD ["/entrypoint.sh"]
+COPY        --chown=container:container ./entrypoint.sh /entrypoint.sh
+RUN         chmod +x /entrypoint.sh
+ENTRYPOINT    ["/usr/bin/tini", "-g", "--"]
+CMD         ["/entrypoint.sh"]
