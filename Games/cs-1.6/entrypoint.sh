@@ -35,6 +35,13 @@ if [ ! -f "./installed" ]; then
   mv -f ./HLDS-CS1.6/cstrike ../cstrike
   rm -r ./HLDS-CS1.6
 
+## set up 32 bit libraries
+mkdir -p ../.steam/sdk32
+cp -f ./linux32 ../.steam/sdk32
+
+## set up 64 bit libraries
+mkdir -p ../.steam/sdk64
+cp -v linux64/steamclient.so ../.steam/sdk64/steamclient.so
   # Create the 'installed' file to mark that the installation is complete
   touch ../installed
   cd /home/container || exit 1
