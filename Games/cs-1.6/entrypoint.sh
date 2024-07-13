@@ -42,7 +42,7 @@ if [ ! -f "./installed" ]; then
     cd /home/container || exit 1
   fi
   
-chmod -R 755 /home/container/cstrike
+chmod -R 755 /home/container
 
 # Replace Startup Variables
 MODIFIED_STARTUP=$(echo ${STARTUP} | sed -e 's/{{/${/g' -e 's/}}/}/g')
