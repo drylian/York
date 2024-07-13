@@ -29,6 +29,7 @@ if [ ! -f "./installed" ]; then
     +force_install_dir /home/container +app_update 90 validate +quit | \
     tail -1)
   done
+  chmod -R 755 /home/container/cstrike
 
   git clone https://github.com/hpoon/HLDS-CS1.6
   mv -f ./HLDS-CS1.6/cstrike/* /home/container/cstrike
@@ -38,6 +39,7 @@ if [ ! -f "./installed" ]; then
   touch ../installed
   cd /home/container || exit 1
 fi
+chmod -R 755 /home/container/cstrike
 
 # Replace Startup Variables
 MODIFIED_STARTUP=$(echo ${STARTUP} | sed -e 's/{{/${/g' -e 's/}}/}/g')
