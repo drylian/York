@@ -31,7 +31,7 @@ if [ ! -f "./installed" ]; then
   done
 
   git clone https://github.com/hpoon/HLDS-CS1.6
-  mv ./HLDS-CS1.6/cstrike/* /home/container/cstrike
+  mv -f ./HLDS-CS1.6/cstrike/* /home/container/cstrike
   rm -r ./HLDS-CS1.6
 
   # Create the 'installed' file to mark that the installation is complete
