@@ -29,11 +29,11 @@ if [ ! -f "./installed" ]; then
     +force_install_dir /home/container +app_update 90 validate +quit | \
     tail -1)
   done
-  chmod -R 755 /home/container/cstrike
+  rm -r /home/container/cstrike
 
-  # git clone https://github.com/hpoon/HLDS-CS1.6
-  # mv -f ./HLDS-CS1.6/cstrike/* /home/container/cstrike
-  # rm -r ./HLDS-CS1.6
+  git clone https://github.com/hpoon/HLDS-CS1.6
+  mv -f ./HLDS-CS1.6/cstrike/* /home/container/cstrike
+  rm -r ./HLDS-CS1.6
 
   # Create the 'installed' file to mark that the installation is complete
   touch ../installed
