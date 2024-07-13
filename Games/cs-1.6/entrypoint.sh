@@ -15,6 +15,8 @@ cd /home/container || exit 1
 
 # Check if the 'installed' file exists 
 if [ ! -f "./installed" ]; then
+  cd /home/container/steamcmd || exit 1
+
   while test "$status" != "Success! App '90' fully installed."; do 
     status=$(./steamcmd.sh +login anonymous \
     +force_install_dir /home/container +app_update 90 validate +quit | \
@@ -27,6 +29,7 @@ if [ ! -f "./installed" ]; then
 
   # Create the 'installed' file to mark that the installation is complete
   touch ./installed
+  cd /home/container || exit 1
 fi
 
 # Replace Startup Variables
