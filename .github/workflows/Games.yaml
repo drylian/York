@@ -6,7 +6,7 @@ on:
   push:
     branches:
       - main
-    paths:z
+    paths:
       - Games/**
 jobs:
   push:
@@ -18,7 +18,7 @@ jobs:
         game:
           - cs-1.6
           - survivalcraft
-          
+
     steps:
       - uses: actions/checkout@v3
       - uses: docker/setup-buildx-action@v2

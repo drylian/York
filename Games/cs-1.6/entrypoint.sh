@@ -13,7 +13,7 @@ export INTERNAL_IP
 
 cd /home/container || exit 1
 
-# Check if the 'installed' file exists
+# Check if the 'installed' file exists 
 if [ ! -f "./installed" ]; then
   while test "$status" != "Success! App '90' fully installed."; do 
     status=$(./steamcmd.sh +login anonymous \
