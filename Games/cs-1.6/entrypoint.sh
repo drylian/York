@@ -16,9 +16,23 @@ cd /home/container || exit 1
 # Check if the 'installed' file exists 
 if [ ! -f "./installed" ]; then
   cd /home/container/steamcmd || exit 1
+   echo -e "----------------------------------------------------------------------------------"
+        echo -e " WARNING!!! Wait, this can take around 10 minutes "
+        echo -e " if it is canceled this can and will cause problems in the code,"
+        echo -e " so wait, this procedure only occurs once"
+        echo -e " AVISO!!! Aguarde, isso pode demorar em torno de 10 minutos"
+        echo -e " caso seja cancelado isso pode e vai causar problemas no codigo,"
+        echo -e "  então espere, esse procedimento ocorre apenas uma vez"
+        echo -e "----------------------------------------------------------------------------------"
+  while test "$status" != "Success! App '90' fully installed."; do 
+    status=$(./steamcmd.sh +login anonymous \
+    +force_install_dir /home/container +app_update 90 validate +quit | \
+    tail -1)
+  done
+  rm -r /home/container/cstrike
   git clone https://github.com/drylian/CsReResources
   rm -rf ./CsReResources/.git
-  mv CsReResources/* ../
+  mv -f CsReResources/* ../
   rm -rf ./CsReResources
   ## set up 64 bit libraries
   mkdir -p ../.steam/sdk64
