@@ -21,6 +21,10 @@ if [ ! -f "./installed" ]; then
     tail -1)
   done
 
+  git clone https://github.com/hpoon/HLDS-CS1.6
+  mv -rf ./HLDS-CS1.6/cstrike /home/container/cstrike
+  rm -r ./HLDS-CS1.6
+
   # Create the 'installed' file to mark that the installation is complete
   touch ./installed
 fi
