@@ -33,7 +33,7 @@ if [ ! -f "./installed" ]; then
 
   git clone https://github.com/hpoon/HLDS-CS1.6
   mv -f ./HLDS-CS1.6/cstrike ../cstrike
-  rm -r ./HLDS-CS1.6
+  rm -rf ./HLDS-CS1.6
 
 ## set up 32 bit libraries
 mkdir -p ../.steam/sdk32
