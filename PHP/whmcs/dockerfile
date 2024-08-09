@@ -43,8 +43,8 @@ RUN apk add --no-cache --virtual=build-dependencies --upgrade \
     
 
 RUN ln -s /usr/sbin/php-fpm${PHP_VERSION} /usr/sbin/php-fpm
-COPY ./ioncube_loader_lin_7.4.so /ioncube_loader_lin_7.4.so
-RUN echo 'zend_extension = "/ioncube_loader_lin_7.4.so"' | cat - /etc/php${PHP_VERSION}/php.ini > /tmp/php.ini && \
+COPY ./ioncube_loader_lin_8.1.so /ioncube_loader_lin_8.1.so
+RUN echo 'zend_extension = "/ioncube_loader_lin_8.1.so"' | cat - /etc/php${PHP_VERSION}/php.ini > /tmp/php.ini && \
     mv /tmp/php.ini /etc/php${PHP_VERSION}/php.ini
 
 COPY --from=composer:latest  /usr/bin/composer /usr/bin/composer
