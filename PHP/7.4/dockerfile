@@ -2,7 +2,7 @@ FROM alpine:3.14
 
 RUN apk --update --no-cache add curl ca-certificates nginx git
 
-ENV PHP_VERSION="7"
+ENV PHP_VERSION="81"
 
 RUN apk update && \
     apk add --no-cache --update \
