@@ -21,7 +21,7 @@ jobs:
           - "8.0"
           - "8.1"
           - "8.2"
-          - "paneldactyl"
+          - "whmcs"
           
     steps:
       - uses: actions/checkout@v3
