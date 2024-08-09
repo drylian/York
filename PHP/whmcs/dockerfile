@@ -4,7 +4,7 @@ FROM alpine:3.14
 LABEL author="Ashu" maintainer="Matheusn.biolowons@gmail.com"
 
 ENV LD_PRELOAD="/usr/lib/preloadable_libiconv.so"
-ENV PHP_VERSION="7"
+ENV PHP_VERSION="81"
 
 RUN apk add --no-cache --virtual=build-dependencies --upgrade \
     ca-certificates \
