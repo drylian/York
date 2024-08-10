@@ -48,8 +48,8 @@ COPY ./includes /includes
 
 RUN echo 'zend_extension = "/includes/ioncube_loader_lin_8.2.so"' | cat - /etc/php${PHP_VERSION}/php.ini > /tmp/php.ini && \
     mv /tmp/php.ini /etc/php${PHP_VERSION}/php.ini
-    ioncube_loader_lin_8.2.so
-COPY --from=composer:latest  /usr/bin/composer /usr/bin/composer
+
+    COPY --from=composer:latest  /usr/bin/composer /usr/bin/composer
 
 # Esse codigo o Drylian me passou
 # Instala o bash a
