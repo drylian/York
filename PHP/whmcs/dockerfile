@@ -1,10 +1,10 @@
 FROM node:20-alpine AS node
-FROM alpine:3.20
+FROM alpine:3.14
 
 LABEL author="Ashu" maintainer="Matheusn.biolowons@gmail.com"
 
 ENV LD_PRELOAD="/usr/lib/preloadable_libiconv.so"
-ENV PHP_VERSION="82"
+ENV PHP_VERSION="7"
 
 RUN apk add --no-cache --virtual=build-dependencies --upgrade \
     ca-certificates \
@@ -46,7 +46,7 @@ RUN ln -s /usr/sbin/php-fpm${PHP_VERSION} /usr/sbin/php-fpm
 
 COPY ./ioncube /ioncube
 
-RUN echo 'zend_extension = "/ioncube/ioncube_loader_lin_8.2.so"' | cat - /etc/php${PHP_VERSION}/php.ini > /tmp/php.ini && \
+RUN echo 'zend_extension = "/ioncube/ioncube_loader_lin_7.4.so"' | cat - /etc/php${PHP_VERSION}/php.ini > /tmp/php.ini && \
     mv /tmp/php.ini /etc/php${PHP_VERSION}/php.ini
 
     COPY --from=composer:latest  /usr/bin/composer /usr/bin/composer
