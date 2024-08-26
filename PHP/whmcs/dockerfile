@@ -44,6 +44,8 @@ RUN apk add --no-cache --virtual=build-dependencies --upgrade \
     php${PHP_VERSION}-ctype
     
 RUN ln -s /usr/sbin/php-fpm${PHP_VERSION} /usr/sbin/php-fpm
+RUN ln -s /usr/sbin/php${PHP_VERSION} /usr/sbin/php
+
 COPY --from=composer:latest  /usr/bin/composer /usr/bin/composer
 
 # Esse codigo o Drylian me passou
