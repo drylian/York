@@ -42,11 +42,6 @@ RUN apk add --no-cache --virtual=build-dependencies --upgrade \
     php-sockets \
     php-ctype
     
-RUN ln -s /usr/sbin/php-fpm /usr/sbin/php-fpm
-RUN rm /usr/sbin/php && ln -s /usr/sbin/php /usr/sbin/php
-
-RUN ln -s /usr/sbin/php /usr/sbin/php
-
 COPY --from=composer:latest  /usr/bin/composer /usr/bin/composer
 
 # Esse codigo o Drylian me passou
