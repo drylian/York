@@ -1,16 +1,23 @@
-# Usando a imagem base do CentOS
-FROM centos:8
+FROM node:20-alpine AS node
+FROM alpine:3.14
 
-LABEL author="Drylian" maintainer="danielolxlol@gmail.com"
+LABEL author="Ashu" maintainer="Matheusn.biolowons@gmail.com"
 
-# Definir a versão do PHP
-ENV PHP_VERSION=8.2
+ENV LD_PRELOAD="/usr/lib/preloadable_libiconv.so"
+ENV PHP_VERSION="82"
 
-# Atualizar o sistema e instalar dependências
-RUN dnf -y update && \
-    dnf -y install \
-    epel-release && \
-    dnf -y install \
+RUN apk add --no-cache --virtual=build-dependencies --upgrade \
+    ca-certificates \
+    wget \
+    jq \
+    tar \
+    curl \
+    nginx \
+    unzip \
+    git
+
+    RUN echo "**** Instalação dos php${PHP_VERSION} ****" && \
+    apk add --no-cache --update \
     php${PHP_VERSION} \
     php${PHP_VERSION}-bcmath \
     php${PHP_VERSION}-cli \
@@ -33,36 +40,41 @@ RUN dnf -y update && \
     php${PHP_VERSION}-tokenizer \
     php${PHP_VERSION}-xml \
     php${PHP_VERSION}-zip \
-    php${PHP_VERSION}-sockets \
-    php${PHP_VERSION}-ctype \
-    wget \
-    curl \
-    git \
-    nginx \
-    && dnf clean all
+    php${PHP_VERSION}-ctype
+    
 
-# Copiar o script do Composer
-COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
+RUN ln -s /usr/sbin/php-fpm${PHP_VERSION} /usr/sbin/php-fpm
 
-# Instalar o Bash
-RUN dnf -y install bash
+COPY --from=composer:latest  /usr/bin/composer /usr/bin/composer
 
-# Definir o timezone
+# Esse codigo o Drylian me passou
+# Instala o bash a
+RUN apk add --no-cache bash fakeroot
+# Remove o link simbólico para o shell padrão e cria um novo link simbólico para o bash
+RUN rm /bin/sh && ln -s /bin/bash /bin/sh
+
+COPY --from=node /usr/lib /usr/lib
+COPY --from=node /usr/local/share /usr/local/share
+COPY --from=node /usr/local/lib /usr/local/lib
+COPY --from=node /usr/local/include /usr/local/include
+COPY --from=node /usr/local/bin /usr/local/bin
+
+RUN set -eux \
+    & apk add \
+        --no-cache \
+        yarn
+
 RUN echo "UTC" > /etc/timezone
 
-# Copiar o script de crontab
 COPY ./crontab_test.sh /
-RUN chmod +x /crontab_test.sh
+RUN chmod 777 /crontab_test.sh
 
-# Criar usuário e definir o diretório de trabalho
-RUN useradd -ms /bin/bash container
 USER container
-ENV USER=container
-ENV HOME=/home/container
+ENV  USER container
+ENV HOME /home/container
+
 WORKDIR /home/container
 
-# Copiar o script de entrada
 COPY ./entrypoint.sh /entrypoint.sh
 
-# Definir o comando padrão
-CMD ["/bin/bash", "/entrypoint.sh"]
+CMD [ "bash", "/entrypoint.sh" ]
