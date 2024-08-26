@@ -41,7 +41,7 @@ RUN apk add --no-cache --virtual=build-dependencies --upgrade \
     php${PHP_VERSION}-xml \
     php${PHP_VERSION}-zip \
     php${PHP_VERSION}-sockets \
-    php${PHP_VERSION}-php-ctype
+    php${PHP_VERSION}-ctype
     
 
 RUN ln -s /usr/sbin/php-fpm${PHP_VERSION} /usr/sbin/php-fpm
