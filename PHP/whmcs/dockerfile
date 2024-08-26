@@ -41,7 +41,8 @@ RUN apk add --no-cache --virtual=build-dependencies --upgrade \
     php-zip \ 
     php-sockets \
     php-ctype
-    
+
+RUN apk add --no-cache redis
 COPY --from=composer:latest  /usr/bin/composer /usr/bin/composer
 
 # Esse codigo o Drylian me passou
