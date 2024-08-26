@@ -46,8 +46,6 @@ RUN apk add --no-cache --virtual=build-dependencies --upgrade \
 
 RUN ln -s /usr/sbin/php-fpm${PHP_VERSION} /usr/sbin/php-fpm
 
-COPY ./ioncube /ioncube
-
 COPY --from=composer:latest  /usr/bin/composer /usr/bin/composer
 
 # Esse codigo o Drylian me passou
