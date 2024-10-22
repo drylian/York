@@ -10,7 +10,7 @@ RUN apt update && \
         nohub \
         lib32stdc++6 \
         libc6-i386 \
-        lib32gcc1 \
+        lib32gcc-s1 \
         iproute2 \
         gnupg2 \
         software-properties-common \
