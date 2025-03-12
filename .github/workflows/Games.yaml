@@ -18,6 +18,7 @@ jobs:
         game:
           - cs-1.6
           - survivalcraft
+          - stardew-valley
 
     steps:
       - uses: actions/checkout@v3
