@@ -9,16 +9,18 @@ RUN         dpkg --add-architecture i386 \
             && apt install -y libtbb2:i386 libtbb-dev:i386 libicu-dev:i386 samba \
             && useradd -d /home/container -m container
 
+
+RUN mkdir -p /var/lib/samba/usershares/ \
+&& chown root:root /var/lib/samba/usershares \
+&& chmod 1770 /var/lib/samba/usershares
+
+
 RUN         mkdir -p /run/systemd && echo 'docker' > /run/systemd/container
 RUN         rm -rf /var/lib/apt/lists/*
 
 USER        container
 ENV         USER=container HOME=/home/container
 WORKDIR     /home/container
-
-RUN mkdir -p /var/lib/samba/usershares/ \
-    && chown root:root /var/lib/samba/usershares \
-    && chmod 1770 /var/lib/samba/usershares
 
 COPY        ./entrypoint.sh /entrypoint.sh
 
