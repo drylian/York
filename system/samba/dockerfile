@@ -16,9 +16,9 @@ USER        container
 ENV         USER=container HOME=/home/container
 WORKDIR     /home/container
 
-RUN         mkdir -p /var/lib/samba/usershares/
-RUN         chgrp container /var/lib/samba/usershares/
-RUN         chmod 1770 /var/lib/samba/usershares/
+RUN mkdir -p /var/lib/samba/usershares/ \
+    && chown root:root /var/lib/samba/usershares \
+    && chmod 1770 /var/lib/samba/usershares
 
 COPY        ./entrypoint.sh /entrypoint.sh
 
