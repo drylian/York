@@ -25,7 +25,7 @@ ENV HOME /home/container
 
 WORKDIR /home/container
 
-RUN /etc/samba/smb.conf /home/container/smb.conf
+COPY /etc/samba/smb.conf /home/container/smb.conf
 
 COPY ./entrypoint.sh /entrypoint.sh
 
