@@ -1,4 +1,4 @@
-name: build Tibia
+name: build Chromium
 on:
   workflow_dispatch:
   schedule:
@@ -7,7 +7,7 @@ on:
     branches:
       - main
     paths:
-      - Tibia/**
+      - chromium/**
 jobs:
   push:
     name: "chromium:${{ matrix.game }}"
