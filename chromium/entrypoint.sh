@@ -4,7 +4,7 @@ cd /home/container
 # Retrieves the internal IP address and exports it for further use.
 export INTERNAL_IP=$(ip route get 1 | awk '{print $NF;exit}')
 
-# Displays the currently installed Node.js version.
+# Displays the currently installed Node.js version. 
 node -v
 
 # Replaces placeholders in the startup command with actual values.
