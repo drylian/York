@@ -35,7 +35,7 @@ jobs:
 
       - uses: docker/build-push-action@v4
         with:
-          context: ./chromium/${{ matrix.game }}
+          context: ./chromium
           file: ./chromium/${{ matrix.game }}/dockerfile
           platforms: linux/amd64
           push: true
