@@ -5,7 +5,7 @@ cd /home/container
 export INTERNAL_IP=$(ip route get 1 | awk '{print $NF;exit}')
 
 # Displays the currently installed Node.js version.  
-node -v
+node -v 
 
 # Replaces placeholders in the startup command with actual values.
 MODIFIED_STARTUP=$(echo -e ${STARTUP} | sed -e 's/{{/${/g' -e 's/}}/}/g')
